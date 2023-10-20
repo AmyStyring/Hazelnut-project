@@ -1,6 +1,23 @@
+#####################################################################
+####			             INTRA-NUT VARIATION		    	              ###
+#####################################################################
+setwd("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Results")
+
+library(readxl)
+data <- read_excel("HazelnutsAllData.xlsx")
+
+nutdat<-subset(data, `Intra-tree/nut` %in% c(1,2,3))
+## This is selecting a the nuts from which multiple samples were analysed 
+
+library(plyr)
+summary <- ddply(nutdat, c("SampleID"), 
+                 function(x) c(d13C=mean(x$normd13C), 
+                               sdC=sd(x$normd13C), diffd13C=max(x$normd13C)-min(x$normd13C), n=nrow(x)))
+
+mean(summary$diffd13C)
 
 #####################################################################
-####			       SUMMARY STATS - INTRA-TREE VARIATION		    	    ###
+####			              INTRA-TREE VARIATION		    	            ###
 #####################################################################
 setwd("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Results")
 
@@ -48,6 +65,7 @@ library(readxl)
 data <- read_excel("HazelnutsAllData.xlsx")
 
 batch<-subset(data, Date %in% c("2021","2022"))
+## This is selecting the modern data
 
 shapiro.test(batch$normd13C)
 
@@ -60,53 +78,43 @@ abline(mod, lty=2)
 
 ## Finding the best model
 library(nlme)
-library(lme4)
 library(MuMIn)
 interceptOnly <- gls(normd13C ~ 1, data=batch, method="ML")
 
-randomInterceptOnly <- lme(normd13C ~ 1, data=batch, random=~1|Location, method="ML")
+randomInterceptOnly <- lme(normd13C ~ 1, data=batch, random=~1|Site, method="ML")
+
+randomInterceptOnlySiteLoc <- lme(normd13C ~ 1, data=batch, random=~1|Site/Location, method="ML")
 
 interceptLAI <- gls(normd13C ~ LAI, data=batch, method="ML")
 
-interceptLAISite <- gls(normd13C ~ LAI + Site, data=batch, method="ML")
-
 interceptLAIDate <- gls(normd13C ~ LAI + Date, data=batch, method="ML")
 
-randomInterceptLAIT <- lme(normd13C ~ LAI, data=batch, random=~1|Location, method="ML")
-summary(randomInterceptLAIT)
-intervals(randomInterceptLAIT)
-plot(randomInterceptLAIT)
-qqnorm(residuals(randomInterceptLAIT)) ## Residuals are normal
-r.squaredGLMM(randomInterceptLAIT) 
-## R2GLMM = 0.52
+randomInterceptLAI_Site <- lme(normd13C ~ LAI, data=batch, random=~1|Site, method="ML")
 
-randomInterceptLAISiteTree <- lme(normd13C ~ LAI + Site, data=batch, random=~1|Location, method="ML")
-summary(randomInterceptLAISiteTree)
-plot(randomInterceptLAISiteTree) ## Residuals are normal
+randomInterceptLAI_Loc <- lme(normd13C ~ LAI, data=batch, random=~1|Location, method="ML")
+summary(randomInterceptLAI_Loc)
+intervals(randomInterceptLAI_Loc)
+plot(randomInterceptLAI_Loc)
+qqnorm(residuals(randomInterceptLAI_Loc)) ## Residuals are normal
+r.squaredGLMM(randomInterceptLAI_Loc) 
+## Conditional R2 = 0.52
 
-randomInterceptLAIDateTree <- lme(normd13C ~ LAI + Date, data=batch, random=~1|Tree, method="ML")
+randomInterceptLAI_SiteLoc <- lme(normd13C ~ LAI, data=batch, random=~1|Site/Location, method="ML")
 
-randomInterceptLAITree <- lme(normd13C ~ LAI, data=batch, random=~1|Site/Tree, method="ML")
+randomInterceptLAIDate_Site <- lme(normd13C ~ LAI + Date, data=batch, random=~1|Site, method="ML")
 
-randomInterceptLAISiteDateTree <- lme(normd13C ~ LAI + Site + Date, data=batch, random=~1|Tree, method="ML")
+randomInterceptLAIDate_SiteLoc <- lme(normd13C ~ LAI + Date, data=batch, random=~1|Site/Location, method="ML")
 
-anova(interceptOnly, randomInterceptOnly, interceptLAI, interceptLAISite, interceptLAIDate, 
-      randomInterceptLAIT, randomInterceptLAISiteTree, randomInterceptLAIDateTree,
-      randomInterceptLAISiteDateTree)
+anova(interceptOnly, randomInterceptOnly, randomInterceptOnlySiteLoc, interceptLAI, interceptLAIDate, 
+      randomInterceptLAI_Site, randomInterceptLAI_Loc, randomInterceptLAI_SiteLoc, randomInterceptLAIDate_Site, 
+      randomInterceptLAIDate_SiteLoc)
      
 #####################################################################
-##						      STATISTICS	- d13C and Openness				         ##
+##						            d13C and Openness				                 ##
 #####################################################################
-require(dplyr)
-require(tidyr)
-require(ordinal)
-require(lme4)
-require(ggplot2)
-require(car)
-require(MuMIn)
-require(nlme)
-library(car)
 library(readxl)
+library(car)
+library(nlme)
 
 setwd("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Results")
 data <- read_excel("HazelnutsAllData.xlsx")
@@ -126,25 +134,13 @@ leveneTest(batch$normd13C, batch$LAI_bin) ##Variances are similar between types 
 model<-lme(normd13C ~ LAI_bin, random=~1|Location, data=batch, method="REML")
 anova.lme(model, type="sequential", adjustSigma=F) ##Significant effect of canopy
 
-library(multcompView)
 library(lsmeans)
-library(multcomp)
-library(lmerTest)
 
 leastsquare = lsmeans(model,
                       pairwise ~ LAI_bin,
                       adjust="tukey")       ###  Tukey-adjusted comparisons
 
 leastsquare
-
-model<-lmer(normd13C ~ LAI_bin + (1|Location), data=batch, REML=T)
-anova(model)
-rand(model)
-difflsmeans(model, test.effs="LAI_bin")
-
-## Linear model
-model<-lme(normd13C ~ LAI_bin, random=~1|Location, data=batch, method="REML")
-summary(model)
 
 #####################################################################
 ##						      STATISTICS	- Mesolithic sites				         ##
@@ -234,10 +230,9 @@ colnames(summary)[8]<-"CI"
 
 
 library(car)
-library(clinfun)
 library(pgirmess)
 
-batch<-subset(batch, Period!='Neolithic' )
+batch<-subset(batch, Period!='Neolithic' ) ## Remove Neolithic data because they are too few
 
 by(batch$normd13C, batch$Period, shapiro.test) ##d13C values are normally distributed by openness 
 quartz(6,6)
