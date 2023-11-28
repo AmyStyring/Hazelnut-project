@@ -1,11 +1,23 @@
+#######################################################################
+###     R script for calculating accuracy and precision of data     ### 
+###                 in Supplementary Table 3                        ###
+###  Styring et al. 2024 Frontiers in Environmental Archaeology     ###
+###  Title: "Carbon isotope values of hazelnut shells: a new proxy  ### 
+###                       for canopy density"                       ###
+###   This R code runs all analyses presented in the manuscript     ###
+###       Authors: A Styring, amy.styring@arch.ox.ac.uk             ###
+#######################################################################
 
-###################################################################
-####					        EXTRACTING STANDARDS					            ###
-###################################################################
+# load the libraries into R
 library(readxl)
 library(dplyr)
 library(multiway)
 
+###################################################################
+####				EXTRACTING REFERENCE MATERIALS FROM RUNFILES				###
+###################################################################
+
+# load data
 data1 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 1")
 data2 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 2")
 data3 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 3")
@@ -21,11 +33,12 @@ RawStandards <- RawStandards[ ,c(2,15,19)]
 names(RawStandards) <- c("ID", "Runfile","normd13C")
 
 ###################################################################
-####					        EXTRACTING REPLICATES					            ###
+####					 EXTRACTING REPLICATE SAMPLE MEASUREMENTS					###
 ###################################################################
 for (i in c(2, 4:14, 16:20)){data[,i] <- as.numeric(as.character(data[,i]))}
 data$Runfile <- as.character(data$Runfile)
 
+# Replicate samples are denoted by DA and DB after the Sample ID
 RepCA<-dat[grep("DA$", dat$ID), ]
 RepCA <- RepCA[order(as.character(RepCA$ID)), ]
 RepCA <- RepCA[ ,c(2,15, 19)]
