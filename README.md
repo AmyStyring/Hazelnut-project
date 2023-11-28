@@ -10,12 +10,12 @@ This repository contains:
 
 Below are explanatory notes for column headings in Styring_et_al_HazelnutData.xlsx
 
-- SampleID: Unique Sample ID.
-- Site: Modern sampling site or archaeological site.
-- Location: Location (sub-site) within modern sampling site where a leaf area index measurement was taken and hazelnuts sampled from individual trees or from the ground below trees.
-- Tree: Where nuts were collected directly from a tree, or there was only one hazel tree in the location, a unique Tree ID is given. 
-- Intra-tree/nut: Indicates which modern nutshell samples were included in the intra-tree or intra-nutshell comparisons.
-- LAI: Leaf Area Index measured at each modern sampling location.
+1. SampleID: Unique Sample ID.
+2. Site: Modern sampling site or archaeological site.
+3. Location: Location (sub-site) within modern sampling site where a leaf area index measurement was taken and hazelnuts sampled from individual trees or from the ground below trees.
+4. Tree: Where nuts were collected directly from a tree, or there was only one hazel tree in the location, a unique Tree ID is given.
+5. Intra-tree/nut: Indicates which modern nutshell samples were included in the intra-tree or intra-nutshell comparisons.
+6. LAI: Leaf Area Index measured at each modern sampling location.
 d13CCO2: The d13C value of atmospheric carbon dioxide. For modern samples this is an annual average d13C value determined from air sampled at weekly intervals during 2021 and 2021 (from Global Monitoring Laboratory https://gml.noaa.gov/dv/iadv/, Pallas-Sammaltunturi station, Finland). For archaeological samples this is the d13C value approximated by the AIRCO2_LOESS system (Ferrio et al., 2005). 
 Period: Broad time period from which samples derive.
 Date: Date or date range of each sample.
