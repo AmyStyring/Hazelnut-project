@@ -1,6 +1,8 @@
 # Hazelnut-project
 
-These files are associated with: Styring et al. Carbon isotope values of hazelnut shells: a new proxy for canopy density. Frontiers in Environmental Archaeology.
+These files are associated with the Frontiers in Environmental Archaeology article: "Carbon isotope values of hazelnut shells: a new proxy for canopy density".
+
+Authors: Amy K. Styring, Elin Jirdén, Per Lagerås, Mikael Larsson, Arne Sjöström, Karl Ljung
 
 This repository contains:
 1. R script for calculating accuracy and precision of measured isotope values in Supplementary Table 3.
