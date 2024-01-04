@@ -18,25 +18,25 @@ library(multiway)
 ###################################################################
 
 # load data
-data1 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 1")
-data2 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 2")
-data3 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 3")
-data4 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 4")
-data5 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 5")
-data6 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 6")
-data7 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 7")
-data8 <- read_excel("~/Library/CloudStorage/OneDrive-Nexus365/RESEARCH PROJECTS/Hazelnut Pilot/Paper/Supplementary Table 3.xlsx", sheet = "Data-Session 8")
+data1 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 1")
+data2 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 2")
+data3 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 3")
+data4 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 4")
+data5 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 5")
+data6 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 6")
+data7 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 7")
+data8 <- read_excel("Supplementary Table 3.xlsx", sheet = "Data-Session 8")
 
-dat<-rbind(data1, data2, data3, data4, data5, data6, data7, data8)
-RawStandards <- dat[grep("SPRUCE|SEAL|CAFF|SALANINE", dat$ID), ]
+data<-rbind(data1, data2, data3, data4, data5, data6, data7, data8)
+RawStandards <- data[grep("SPRUCE|SEAL|CAFF|SALANINE", data$ID), ]
 RawStandards <- RawStandards[ ,c(2,15,19)]
 names(RawStandards) <- c("ID", "Runfile","normd13C")
 
 ###################################################################
 ####					 EXTRACTING REPLICATE SAMPLE MEASUREMENTS					###
 ###################################################################
-for (i in c(2, 4:14, 16:20)){data[,i] <- as.numeric(as.character(data[,i]))}
-data$Runfile <- as.character(data$Runfile)
+#for (i in c(1, 4:14, 16:20)){data[,i] <- as.numeric(as.character(data[,i]))}
+data$Runfile <- as.character(data$`Runfile date`)
 
 # Replicate samples are denoted by DA and DB after the Sample ID
 RepCA<-dat[grep("DA$", dat$ID), ]
