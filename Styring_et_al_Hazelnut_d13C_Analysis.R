@@ -16,6 +16,7 @@ library(car)
 library(lsmeans)
 library(pgirmess)
 library(clinfun)
+library(pwr)
 
 # load data
 data <- read_excel("Styring_et_al_HazelnutData.xlsx")
@@ -367,3 +368,43 @@ batch$Ranks<-rank(batch$D13C)
 by(batch$Ranks, batch$Period, mean)
 
 kruskalmc(D13C ~ Period, data=batch)
+
+###################################################################################
+### 4.1 Variability in hazelnut shell 13C values within single nuts and trees  ###
+###################################################################################
+
+# Calculate effect size for detecting difference in mean d13C values of hazelnuts 
+# growing in closed and open canopy given that standard deviation in hazelnut shell 
+# d13C values within a single tree is 1.3 per mil.
+
+sd1<-1.3  
+sd2<-1.3  
+sd_pooled<-sqrt((sd1^2 +sd2^2)/2)
+
+mu2<- -29.8 # Least squares mean of closed canopy hazelnut d13C
+
+mu1<- -26.7 # Least squares mean of open hazelnut d13C
+d<-(mu1-mu2)/sd_pooled
+d
+# Effect size is 2.4, which is large
+
+n1<-pwr.t.test(d=d, power=0.80, sig.level=0.05)
+n1   # Number of samples required to detect difference with power of 80% and alpha level 0.05
+
+# Calculate effect size for detecting difference in mean d13C values of hazelnuts 
+# growing in closed and semi-open canopy given that standard deviation in hazelnut shell 
+# d13C values within a single tree is 1.3 per mil.
+
+sd1<-1.3  
+sd2<-1.3  
+sd_pooled<-sqrt((sd1^2 +sd2^2)/2)
+
+mu2<- -29.8 # Least squares mean of closed canopy hazelnut d13C
+
+mu1<- -28.6 # Least squares mean of open hazelnut d13C
+d<-(mu1-mu2)/sd_pooled
+d
+# Effect size is 0.92, which is large
+
+n2<-pwr.t.test(d=d, power=0.80, sig.level=0.05)
+n2   # Number of samples required to detect difference with power of 80% and alpha level 0.05
